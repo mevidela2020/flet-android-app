@@ -1,5 +1,6 @@
 import flet as ft
 
+
 def main(page: ft.Page):
     page.title = "Seguimiento de Musculación - Mariela Videla"
     page.theme_mode = ft.ThemeMode.LIGHT
@@ -19,7 +20,7 @@ def main(page: ft.Page):
                     ft.Text("• Artritis Reumatoide\n• Dolores Cervicales", size=12, color=ft.Colors.RED_900),
                 ]
             ),
-            padding=15
+            padding=15,
         )
     )
 
@@ -29,70 +30,90 @@ def main(page: ft.Page):
             "grupo": "Abdominales",
             "ejercicios": ["Encogimientos Invertidos", "Toco Talón"],
             "dias": "Días 1, 3",
-            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 4x12 | 60D: 4x15"
+            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 4x12 | 60D: 4x15",
         },
         {
             "grupo": "Aductores",
             "ejercicios": ["Sillón Aductores"],
             "dias": "Días 1, 3",
-            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 3x12 | 60D: 4x10"
+            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 3x12 | 60D: 4x10",
         },
         {
             "grupo": "Abductores",
             "ejercicios": ["Sillón Abductores"],
             "dias": "Días 1, 3",
-            "progreso": "Mismas series que Aductores"
+            "progreso": "Mismas series que Aductores",
         },
         {
             "grupo": "Glúteos",
             "ejercicios": ["Banco Patada Atrás Parada"],
             "dias": "Día 2",
-            "progreso": "Seguir progresión según semanas"
+            "progreso": "Seguir progresión según semanas",
         },
         {
             "grupo": "Cuádriceps",
             "ejercicios": ["Sentadillas Libres c/ Mancuerna", "Sillón de Cuádriceps"],
             "dias": "Días 1, 3 (Sentadillas) | Día 2 (Sillón)",
-            "progreso": "Progreso continuo según tolerancia"
+            "progreso": "Progreso continuo según tolerancia",
         },
         {
             "grupo": "Femorales",
             "ejercicios": ["Camilla Femoral", "Polea"],
             "dias": "Días 1, 3 (Camilla) | Día 2 (Polea)",
-            "progreso": "15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10"
+            "progreso": "15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10",
         },
         {
             "grupo": "Pantorrillas",
             "ejercicios": ["Sillón de Coser"],
             "dias": "Día 2",
-            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 4x12 | 60D: 4x15"
-        }
+            "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 4x12 | 60D: 4x15",
+        },
     ]
 
     # Renderizado de tarjetas de ejercicios
     tarjetas_ejercicios = []
     for item in rutina_data:
-        ejercicios_list = [ft.Text(f"• {ej}", size=14, weight=ft.FontWeight.W_500) for ej in item["ejercicios"]]
-        
+        ejercicios_list = [
+            ft.Text(f"• {ej}", size=14, weight=ft.FontWeight.W_500)
+            for ej in item["ejercicios"]
+        ]
+
+        # Etiqueta de días (reemplaza al ft.Chip sin acción)
+        etiqueta_dias = ft.Container(
+            content=ft.Text(item["dias"], size=11, color=ft.Colors.BLUE_900),
+            bgcolor=ft.Colors.BLUE_50,
+            padding=8,
+            border_radius=12,
+        )
+
         tarjeta = ft.Card(
             content=ft.Container(
                 content=ft.Column(
                     [
                         ft.Row(
                             [
-                                ft.Text(item["grupo"], size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.INDIGO_800),
-                                ft.Chip(label=ft.Text(item["dias"], size=11)),
+                                ft.Text(
+                                    item["grupo"],
+                                    size=16,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=ft.Colors.INDIGO_800,
+                                    expand=True,
+                                ),
+                                etiqueta_dias,
                             ],
-                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         ),
-                        ft.Column(ejercicios_list),
-                        ft.Container(
-                            content=ft.Text(f"Progresión: {item['progreso']}", size=12, italic=True, color=ft.Colors.GREY_700),
-                            margin=ft.margin.only(top=5)
-                        )
-                    ]
+                        ft.Column(ejercicios_list, spacing=2),
+                        ft.Text(
+                            f"Progresión: {item['progreso']}",
+                            size=12,
+                            italic=True,
+                            color=ft.Colors.GREY_700,
+                        ),
+                    ],
+                    spacing=8,
                 ),
-                padding=12
+                padding=12,
             )
         )
         tarjetas_ejercicios.append(tarjeta)
@@ -101,8 +122,13 @@ def main(page: ft.Page):
     page.add(
         header,
         ft.Text("Rutina de Entrenamiento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_GREY_900),
-        ft.Column(tarjetas_ejercicios)
+        ft.Column(tarjetas_ejercicios),
     )
 
+
 if __name__ == "__main__":
-    ft.app(main)
+    # ft.run en Flet 0.80+; ft.app en versiones anteriores
+    if hasattr(ft, "run"):
+        ft.run(main)
+    else:
+        ft.app(target=main)
