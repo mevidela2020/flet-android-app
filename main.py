@@ -1,5 +1,4 @@
 import flet as ft
-from flet import app
 
 def main(page: ft.Page):
     page.title = "Seguimiento de Musculación - Mariela Videla"
@@ -12,12 +11,12 @@ def main(page: ft.Page):
         content=ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("VÉLEZ SARSFIELD NORTE", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_900),
+                    ft.Text("VÉLEZ SARSFIELD NORTE", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900),
                     ft.Text("Socia: Mariela Videla | 50 Años", size=14, weight=ft.FontWeight.W_500),
-                    ft.Text("Frecuencia: 3 veces por semana", size=13, color=ft.colors.GREY_700),
+                    ft.Text("Frecuencia: 3 veces por semana", size=13, color=ft.Colors.GREY_700),
                     ft.Divider(),
-                    ft.Text("Observaciones Médicas:", size=13, weight=ft.FontWeight.BOLD, color=ft.colors.RED_700),
-                    ft.Text("• Artritis Reumatoide\n• Dolores Cervicales", size=12, color=ft.colors.RED_900),
+                    ft.Text("Observaciones Médicas:", size=13, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_700),
+                    ft.Text("• Artritis Reumatoide\n• Dolores Cervicales", size=12, color=ft.Colors.RED_900),
                 ]
             ),
             padding=15
@@ -81,14 +80,14 @@ def main(page: ft.Page):
                     [
                         ft.Row(
                             [
-                                ft.Text(item["grupo"], size=16, weight=ft.FontWeight.BOLD, color=ft.colors.INDIGO_800),
+                                ft.Text(item["grupo"], size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.INDIGO_800),
                                 ft.Chip(label=ft.Text(item["dias"], size=11)),
                             ],
                             alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                         ),
                         ft.Column(ejercicios_list),
                         ft.Container(
-                            content=ft.Text(f"Progresión: {item['progreso']}", size=12, italic=True, color=ft.colors.GREY_700),
+                            content=ft.Text(f"Progresión: {item['progreso']}", size=12, italic=True, color=ft.Colors.GREY_700),
                             margin=ft.margin.only(top=5)
                         )
                     ]
@@ -101,9 +100,9 @@ def main(page: ft.Page):
     # Estructura principal de la vista
     page.add(
         header,
-        ft.Text("Rutina de Entrenamiento", size=18, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_GREY_900),
+        ft.Text("Rutina de Entrenamiento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_GREY_900),
         ft.Column(tarjetas_ejercicios)
     )
 
 if __name__ == "__main__":
-    app(target=main)
+    ft.app(main)
