@@ -32,9 +32,9 @@ jobs:
           pip install flet
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      -       - name: Compilar APK con Flet
+      - name: Compilar APK con Flet
         run: |
-          flet build apk --yes
+           build apk --yes
 
       - name: Subir APK como artefacto descargable
         uses: actions/upload-artifact@v4
