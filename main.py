@@ -1,4 +1,5 @@
 import flet as ft
+from flet import app
 
 def main(page: ft.Page):
     page.title = "Seguimiento de Musculación - Mariela Videla"
@@ -105,4 +106,4 @@ def main(page: ft.Page):
     )
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    app(target=main)
