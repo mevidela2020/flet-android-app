@@ -1,3 +1,6 @@
+import json
+import os
+
 import flet as ft
 
 
@@ -7,12 +10,41 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
     page.padding = 20
 
+    # Los pesos se guardan en un archivo JSON junto al script
+    archivo_pesos = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pesos.json")
+    try:
+        with open(archivo_pesos, "r", encoding="utf-8") as f:
+            pesos = json.load(f)
+    except (FileNotFoundError, ValueError):
+        pesos = {}
+
+    def crear_campo(grupo, ejercicio, unidad):
+        clave = f"{grupo}|{ejercicio}"
+
+        def guardar(e):
+            pesos[clave] = e.control.value
+            try:
+                with open(archivo_pesos, "w", encoding="utf-8") as f:
+                    json.dump(pesos, f, ensure_ascii=False, indent=2)
+            except OSError:
+                pass  # si no se puede escribir, el dato queda solo en pantalla
+
+        return ft.TextField(
+            label=unidad,
+            value=pesos.get(clave, ""),
+            width=100,
+            dense=True,
+            text_size=13,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            on_change=guardar,
+        )
+
     # Encabezado con información del perfil y gimnasio
     header = ft.Card(
         content=ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("VÉLEZ SARSFIELD NORTE", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900),
+                    ft.Text("DON NAPOLEÓN", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900),
                     ft.Text("Socia: Mariela Videla | 50 Años", size=14, weight=ft.FontWeight.W_500),
                     ft.Text("Frecuencia: 3 veces por semana", size=13, color=ft.Colors.GREY_700),
                     ft.Divider(),
@@ -68,15 +100,77 @@ def main(page: ft.Page):
             "dias": "Día 2",
             "progreso": "15D: 3x12 | 30D: 3x15 | 45D: 4x12 | 60D: 4x15",
         },
+        {
+            "grupo": "Espinales",
+            "ejercicios": [],
+            "dias": "Sin asignar",
+            "progreso": "Sin datos en la ficha",
+        },
+        {
+            "grupo": "Pectorales",
+            "ejercicios": ["Press Máq. Inclinado", "Mariposa"],
+            "dias": "Días 1, 3 (Press) | Día 2 (Mariposa)",
+            "progreso": "Press: 15D: 3x15 | 30D: 3x12 | 45D: 4x10 | 60D: 4x12\n"
+                        "Mariposa: 15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10",
+        },
+        {
+            "grupo": "Espalda",
+            "ejercicios": ["Press Máq. Abierto", "Jalones a 1 Brazo"],
+            "dias": "Días 1, 3 (Press) | Día 2 (Jalones)",
+            "progreso": "Press: 15D: 3x15 | 30D: 3x12 | 45D: 4x10 | 60D: 4x12\n"
+                        "Jalones: 15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10",
+        },
+        {
+            "grupo": "Hombros",
+            "ejercicios": ["Vuelos Frontales c/ Disco", "Arnold c/ Mancuernas"],
+            "dias": "Días 1, 3 (Vuelos) | Día 2 (Arnold)",
+            "progreso": "15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10",
+        },
+        {
+            "grupo": "Bíceps",
+            "ejercicios": ["Curl Mancuerna Martillo"],
+            "dias": "Día 2",
+            "progreso": "15D: 3x12 | 30D: 3x10 | 45D: 4x12 | 60D: 4x10",
+        },
+        {
+            "grupo": "Tríceps",
+            "ejercicios": ["Extensión Polea c/ Soga"],
+            "dias": "Días 1, 3",
+            "progreso": "15D: 3x15 | 30D: 3x12 | 45D: 4x10 | 60D: 4x12",
+        },
+        {
+            "grupo": "Antebrazos",
+            "ejercicios": [],
+            "dias": "Sin asignar",
+            "progreso": "Sin datos en la ficha",
+        },
+        {
+            "grupo": "Aeróbicos",
+            "ejercicios": ["Aeróbico 1", "Aeróbico 2", "Aeróbico 3"],
+            "unidad": "Minutos",
+            "dias": "Según ficha",
+            "progreso": "Completar los minutos según indicación del profesor",
+        },
     ]
 
     # Renderizado de tarjetas de ejercicios
     tarjetas_ejercicios = []
     for item in rutina_data:
+        unidad = item.get("unidad", "Peso (kg)")
         ejercicios_list = [
-            ft.Text(f"• {ej}", size=14, weight=ft.FontWeight.W_500)
+            ft.Row(
+                [
+                    ft.Text(f"• {ej}", size=14, weight=ft.FontWeight.W_500, expand=True),
+                    crear_campo(item["grupo"], ej, unidad),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            )
             for ej in item["ejercicios"]
         ]
+        if not ejercicios_list:
+            ejercicios_list = [
+                ft.Text("Sin ejercicios asignados", size=13, italic=True, color=ft.Colors.GREY_500)
+            ]
 
         # Etiqueta de días (reemplaza al ft.Chip sin acción)
         etiqueta_dias = ft.Container(
