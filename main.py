@@ -11,7 +11,9 @@ def main(page: ft.Page):
     page.padding = 20
 
     # Los pesos se guardan en un archivo JSON junto al script
-    archivo_pesos = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pesos.json")
+    # En Android/iOS Flet da una carpeta persistente en FLET_APP_STORAGE_DATA
+    carpeta_datos = os.getenv("FLET_APP_STORAGE_DATA") or os.path.dirname(os.path.abspath(__file__))
+    archivo_pesos = os.path.join(carpeta_datos, "pesos.json")
     try:
         with open(archivo_pesos, "r", encoding="utf-8") as f:
             pesos = json.load(f)
